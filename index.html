@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>班主任的今日治愈盲盒 | 神谕卡·教师情绪能量站</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none; /* 避免抽卡时选中文字，提升点击感 */
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(145deg, #f9efe2 0%, #ffe6d5 100%);
+            font-family: 'Segoe UI', 'Quicksand', system-ui, -apple-system, 'Noto Sans TC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem 1.5rem;
+            position: relative;
+        }
+
+        /* 治愈浮动小元素 */
+        body::before {
+            content: "🍎";
+            font-size: 120px;
+            position: absolute;
+            left: 2%;
+            bottom: 5%;
+            opacity: 0.1;
+            pointer-events: none;
+            transform: rotate(-10deg);
+        }
+
+        body::after {
+            content: "📖";
+            font-size: 140px;
+            position: absolute;
+            right: 2%;
+            top: 10%;
+            opacity: 0.08;
+            pointer-events: none;
+            transform: rotate(5deg);
+        }
+
+        /* 主容器 */
+        .container {
+            max-width: 700px;
+            width: 100%;
+            background: rgba(255, 248, 240, 0.75);
+            backdrop-filter: blur(2px);
+            border-radius: 64px;
+            padding: 1.8rem 1.8rem 2.5rem;
+            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(255, 245, 235, 0.6);
+            transition: all 0.2s ease;
+            text-align: center;
+        }
+
+        /* 标题区 */
+        .title-section h1 {
+            font-size: 2.4rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #c78a5a, #a5673f);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            letter-spacing: 2px;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .title-section h1 span {
+            font-size: 2.5rem;
+        }
+
+        .sub {
+            color: #b97f54;
+            background: #fff4ea;
+            display: inline-block;
+            padding: 0.3rem 1.2rem;
+            border-radius: 40px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-top: 12px;
+            backdrop-filter: blur(4px);
+            box-shadow: inset 0 1px 2px #fff8, 0 1px 2px rgba(0,0,0,0.05);
+        }
+
+        /* 卡片区域 */
+        .card-wrapper {
+            margin: 2rem 0 1.8rem;
+            perspective: 1200px;
+            cursor: pointer;
+        }
+
+        /* 卡片主体 - 统一尺寸 */
+        .oracle-card {
+            background: #fffef7;
+            border-radius: 48px;
+            box-shadow: 0 30px 40px -20px rgba(90, 50, 25, 0.3), inset 0 1px 2px rgba(255,255,200,0.8);
+            transition: transform 0.25s cubic-bezier(0.2, 0.9, 0.4, 1.1), box-shadow 0.2s;
+            aspect-ratio: 3 / 4;
+            width: 100%;
+            max-width: 380px;
+            margin: 0 auto;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 2rem 1.8rem;
+            will-change: transform;
+            border: 1px solid rgba(235, 205, 175, 0.6);
+        }
+
+        /* 点击微反馈 */
+        .oracle-card:active {
+            transform: scale(0.97);
+            box-shadow: 0 15px 25px -12px rgba(0, 0, 0, 0.2);
+        }
+
+        /* 正面 & 背面共用样式 */
+        .card-front, .card-back {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 1.3rem;
+        }
+
+        /* 背面统一设计 */
+        .card-back {
+            background: #f7ede3;
+            background-image: radial-gradient(circle at 25% 40%, rgba(200, 160, 120, 0.1) 2%, transparent 2.5%);
+            background-size: 28px 28px;
+            border-radius: 48px;
+        }
+
+        .back-icon {
+            font-size: 4.2rem;
+            filter: drop-shadow(2px 4px 8px rgba(0,0,0,0.1));
+            background: #f5e4d4;
+            width: 110px;
+            height: 110px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 60px;
+            margin-bottom: 0.5rem;
+        }
+
+        .back-text {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #b2602e;
+            letter-spacing: 1px;
+            background: rgba(255, 245, 235, 0.7);
+            padding: 0.2rem 1rem;
+            border-radius: 60px;
+        }
+
+        .back-hint {
+            font-size: 0.9rem;
+            color: #b87a4b;
+            background: rgba(255, 235, 215, 0.9);
+            padding: 0.4rem 1rem;
+            border-radius: 60px;
+            font-weight: 500;
+            margin-top: 1rem;
+        }
+
+        /* 正面样式 (治愈能量) */
+        .card-front {
+            background: linear-gradient(145deg, #ffffff 0%, #fffbf5 100%);
+            border-radius: 48px;
+        }
+
+        .front-emoji {
+            font-size: 4.8rem;
+            background: #fce9db;
+            padding: 0.3rem 0.8rem;
+            border-radius: 80px;
+            display: inline-block;
+            box-shadow: inset 0 -1px 0 #ffe1c4, 0 5px 12px rgba(160, 100, 40, 0.1);
+        }
+
+        .front-title {
+            font-size: 1.9rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #c17b4a, #9c5832);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            letter-spacing: 1px;
+            margin-top: 0.2rem;
+        }
+
+        .front-content {
+            font-size: 1rem;
+            line-height: 1.55;
+            color: #4f2f1a;
+            background: #fff5ea;
+            padding: 1rem 1rem;
+            border-radius: 36px;
+            width: 100%;
+            font-weight: 500;
+            text-align: center;
+            box-shadow: inset 0 1px 3px #fff8e7, 0 2px 4px rgba(0,0,0,0.02);
+        }
+
+        /* 卡牌底部提示 */
+        .tap-hint {
+            font-size: 0.8rem;
+            color: #c28b62;
+            background: #fff0e4;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 0.4rem 1rem;
+            border-radius: 30px;
+            margin-top: 0.5rem;
+            transition: 0.2s;
+        }
+
+        /* 能量计数条 */
+        .energy-badge {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-top: 1.5rem;
+            font-size: 0.8rem;
+            color: #7e5a3e;
+            background: #faeedf;
+            width: fit-content;
+            margin-left: auto;
+            margin-right: auto;
+            padding: 0.4rem 1rem;
+            border-radius: 32px;
+            backdrop-filter: blur(2px);
+        }
+
+        .energy-badge span {
+            font-weight: 600;
+            color: #b45a2e;
+        }
+
+        footer {
+            font-size: 0.7rem;
+            margin-top: 1.8rem;
+            color: #be8b60;
+            opacity: 0.8;
+        }
+        
+        /* 制作者信息独立行，柔和且小巧 */
+        .credit-line {
+            font-size: 0.65rem;
+            margin-top: 0.6rem;
+            color: #c5966e;
+            opacity: 0.7;
+            letter-spacing: 0.3px;
+            border-top: 1px dashed rgba(190, 139, 96, 0.25);
+            display: inline-block;
+            padding-top: 0.5rem;
+            width: auto;
+        }
+
+        /* 动画（抽卡轻柔闪动） */
+        @keyframes softGlow {
+            0% { text-shadow: 0 0 0px rgba(193,123,74,0); opacity: 0.9; transform: scale(1);}
+            50% { text-shadow: 0 0 6px rgba(193,123,74,0.4); opacity: 1; transform: scale(1.01);}
+            100% { text-shadow: 0 0 0px rgba(193,123,74,0); opacity: 0.9; transform: scale(1);}
+        }
+
+        .card-front .front-emoji, .card-front .front-title {
+            animation: softGlow 0.35s ease-out;
+        }
+
+        /* 隐藏类 */
+        .hidden {
+            display: none;
+        }
+
+        @media (max-width: 500px) {
+            .container {
+                padding: 1rem 1rem 1.8rem;
+            }
+            .oracle-card {
+                padding: 1.2rem 1rem;
+            }
+            .front-title {
+                font-size: 1.5rem;
+            }
+            .front-content {
+                font-size: 0.85rem;
+                padding: 0.8rem;
+            }
+            .front-emoji {
+                font-size: 3.5rem;
+            }
+            .title-section h1 {
+                font-size: 1.8rem;
+            }
+            .credit-line {
+                font-size: 0.6rem;
+                margin-top: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="title-section">
+        <h1>
+            <span>🎴</span> 班主任的今日治愈盲盒 <span>🍃</span>
+        </h1>
+        <div class="sub">✨ 神谕卡 · 专属于你的情绪加油站 ✨</div>
+    </div>
+
+    <!-- 卡片容器 点击触发抽卡/换卡 -->
+    <div class="card-wrapper" id="oracleCardWrapper">
+        <div class="oracle-card" id="oracleCard">
+            <!-- 背面区域 (统一样式) -->
+            <div class="card-back" id="cardBack">
+                <div class="back-icon">🔮🌸</div>
+                <div class="back-text">盲盒神谕</div>
+                <div class="back-hint">✦ 轻触卡片 · 抽取治愈能量 ✦</div>
+            </div>
+            <!-- 正面区域 (动态内容) -->
+            <div class="card-front hidden" id="cardFront">
+                <div class="front-emoji" id="frontEmoji">✍️</div>
+                <div class="front-title" id="frontTitle">印刷体复临</div>
+                <div class="front-content" id="frontContent">
+                    今日全班作业字迹堪比印刷体，横平竖直，赏心悦目。红笔批下去一路绿灯，极度舒适，连乳腺都通畅了。
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="tap-hint">
+        🪄 点击卡片 ➜ 即刻抽换神谕卡 🪄
+    </div>
+    <div class="energy-badge">
+        🌟 今日盲盒能量库 · 共 <span id="cardCount">24</span> 张治愈神谕 🌟
+    </div>
+    <footer>
+        🧘‍♀️ 每一次点击，都是宇宙送来的安慰 | 愿你卸下疲惫，温柔自愈
+        <!-- 制作者专属标签：字体比原有footer稍小一点，保持温柔低调 -->
+        <div class="credit-line">🍃 本网页由花一独家制作 · 为教师情绪而生的治愈神谕 🍃</div>
+    </footer>
+</div>
+
+<script>
+    // ======================= 🔮 24张教师专属神谕能量卡库 (完全提供) =======================
+    const pool = [
+        // === 维度一：作业治愈 ===
+        { emoji: "✍️", title: "印刷体复临", content: "今日全班作业字迹堪比印刷体，横平竖直，赏心悦目。红笔批下去一路绿灯，极度舒适，连乳腺都通畅了。" },
+        { emoji: "✨", title: "零错误结界", content: "今天的作业错误率低到感人，没有匪夷所思的奇葩答案。批改速度提升300%，你有大把时间留给自己。" },
+        { emoji: "💯", title: "红勾满屏符", content: "今日宜大笔一挥狂圈‘红勾’。学生开窍，正确率飙升，批作业变成了纯粹的机械解压运动，爽！" },
+
+        // === 维度二：课堂管理 ===
+        { emoji: "👩‍🏫", title: "神仙课堂卡", content: "上课时台下全神贯注，没人做小动作，没人讲小话。提问时小手举得像树林，回答直击要点，体验满分教学艺术。" },
+        { emoji: "🤫", title: "静音纯享版", content: "今日课堂自带‘降噪滤镜’。你一开口，全场肃静，学生听话得像按了暂停键。不费嗓子，不伤元气，优雅下课。" },
+        { emoji: "🧠", title: "全神贯注香", content: "今天上课学生们的灵魂全部在线，眼神清澈且坚定，跟着你的思路疯狂点头。这是一堂让你找回教学初心的神仙课。" },
+
+        // === 维度三：班级管理 ===
+        { emoji: "📢", title: "自主早读令", content: "早自习时间，踏入班级竟然书声琅琅。没有一个人抄作业或发呆，班干部管理得井井有条，完全不需要你操心。" },
+        { emoji: "🎖️", title: "全能班干盾", content: "今天班干部突然‘觉醒’！课余时间的纪律、卫生被他们安排得妥妥当当，主动为你分担重任，不给你增加任何负担。" },
+        { emoji: "🕊️", title: "无事发生符", content: "今日班级磁场大吉，课间操、午休全员安分。没有打破玻璃，没有打架告状，属于班主任的最高礼遇：无事发生！" },
+
+        // === 维度四：向上社交（防领导折腾） ===
+        { emoji: "📭", title: "隐形人结界", content: "今天在学校领导眼里自动隐形。没有突如其来的公开课通知，没有各种教学竞赛，没有催交论文的催命符，平静安稳。" },
+        { emoji: "🛡️", title: "推诿御守", content: "今日运势极佳，各种莫名其妙的行政杂务、无意义的开会填表都会完美绕开你。安安心心做个纯粹的教书匠。" },
+        { emoji: "🎉", title: "竞赛免疫牌", content: "不仅没有被硬塞公开课，甚至还避开了各种折腾人的教学评比。今天你是自由的，静静看着别人卷，你只管喝茶。" },
+
+        // === 维度五：同事交往 ===
+        { emoji: "🍫", title: "零食互投喂", content: "办公室氛围和谐度100%！今天会收到同事的神秘小零食，你带的投喂也大受欢迎。大家一边吃一边吐槽，快乐加倍。" },
+        { emoji: "🤝", title: "小人退散符", content: "办公室里没有钩心斗角，没有小人作祟。遇到烦心事，职场搭子们一拥而上替你分担、陪你吐槽，垃圾情绪瞬间清空。" },
+        { emoji: "☕", title: "神仙办公室", content: "今日宜在办公室带头‘合法摸鱼’。薪水小偷们心照不宣，互相打掩护，下午茶时间长达半小时，工作氛围极其融洽。" },
+
+        // === 维度六：家长沟通 ===
+        { emoji: "📱", title: "免投诉金牌", content: "今天家长群风平浪静，没有杠精搞事情，没有奇葩来炸群讹人。家长们通情达理，甚至还会发来充满理解的感谢信息。" },
+        { emoji: "🤝", title: "神仙家长卡", content: "遇到问题时，家长百分之百理解你的难处，积极配合，绝不甩锅。今天的你拥有全网最让人羡慕的家校关系。" },
+        { emoji: "🔕", title: "免打扰御守", content: "下班后手机一片清静，没有家长的连环夺命连线。你可以放心把手机扣过去，享受完全属于你个人的夜晚。" },
+
+        // === 维度七：家人关怀 ===
+        { emoji: "🍲", title: "后勤满分盾", content: "回到家，家人不仅深深理解你当老师的辛苦，还贴心地为你准备好了热气腾腾的私房美食。你只管负责被治愈和干饭。" },
+        { emoji: "❤️", title: "温柔避风港", content: "今天在家里享受‘太上皇’待遇。不用做家务，不用听唠叨，家人的关心和温暖正源源不断地为你充能，治愈你白天的疲惫。" },
+        { emoji: "🍕", title: "深夜慰藉符", content: "今晚家人会化身‘深夜食堂’老板，给你准备最爱吃的甜品或夜宵。把白天的烦恼吃进肚子里，化作明天的战斗力。" },
+
+        // === 维度八：兴趣爱好 ===
+        { emoji: "🧘", title: "多巴胺觉醒", content: "下班后的时间完全属于你！游个泳、跳个舞、练练瑜伽、打打羽毛球，流汗的同时，把所有教学焦虑一扫而空。" },
+        { emoji: "🧳", title: "灵魂向往远方", content: "今日宜在脑海中规划下一次的旅游路线。课后多余的时间和精力，足够支撑你去做甜品、研究美食，生活不止有讲台。" },
+        { emoji: "🍰", title: "甜品治愈卡", content: "今天你有充足的闲暇时间去发展兴趣。烤个蛋糕或做个手工，看着面团在烤箱里膨胀，你的幸福感也在悄悄爆棚。" }
+    ];
+
+    // 确保24张 (验证长度)
+    console.log('神谕卡数量:', pool.length);
+    document.getElementById('cardCount').innerText = pool.length;
+
+    // DOM 元素
+    const cardBackDiv = document.getElementById('cardBack');
+    const cardFrontDiv = document.getElementById('cardFront');
+    const frontEmoji = document.getElementById('frontEmoji');
+    const frontTitle = document.getElementById('frontTitle');
+    const frontContent = document.getElementById('frontContent');
+    const oracleCard = document.getElementById('oracleCard');
+
+    // 状态管理: isFrontShowing = 是否显示正面（已经开过一次卡）
+    let isFrontShowing = false;
+    // 当前显示的卡片对象 (缓存)
+    let currentCard = null;
+
+    // 辅助: 随机获取一张新神谕卡 (pool 中随机)
+    function getRandomCard() {
+        const randomIndex = Math.floor(Math.random() * pool.length);
+        return { ...pool[randomIndex] }; // 返回新对象
+    }
+
+    // 更新正面UI (传入card对象)
+    function updateFrontUI(card) {
+        if (!card) return;
+        frontEmoji.innerText = card.emoji;
+        frontTitle.innerText = card.title;
+        frontContent.innerText = card.content;
+        // 存储当前卡片
+        currentCard = card;
+    }
+
+    // 抽新卡并刷新正面 (如果正面显示状态下，直接刷新内容，并且附带轻柔动画)
+    function refreshRandomCard() {
+        const newCard = getRandomCard();
+        updateFrontUI(newCard);
+        // 动画加强 (已通过CSS动画类, 重新触发动画)
+        // 更优雅: 添加临时类触发动画
+        frontEmoji.style.animation = 'none';
+        frontTitle.style.animation = 'none';
+        // 强制重排
+        void frontEmoji.offsetHeight;
+        void frontTitle.offsetHeight;
+        frontEmoji.style.animation = '';
+        frontTitle.style.animation = '';
+        // 添加微光瞬闪
+        frontEmoji.style.animation = 'softGlow 0.35s ease-out';
+        frontTitle.style.animation = 'softGlow 0.35s ease-out 0.05s';
+        setTimeout(() => {
+            if (frontEmoji) frontEmoji.style.animation = '';
+            if (frontTitle) frontTitle.style.animation = '';
+        }, 400);
+    }
+
+    // 首次开启盲盒: 从背面切换到正面, 同时随机抽取第一张卡
+    function openBlindBoxFirstTime() {
+        // 随机第一张卡
+        const initCard = getRandomCard();
+        updateFrontUI(initCard);
+        // 切换显示: 隐藏背面，显示正面
+        cardBackDiv.classList.add('hidden');
+        cardFrontDiv.classList.remove('hidden');
+        isFrontShowing = true;
+    }
+
+    // 处理卡片点击 (核心交互：每点击一次，换一张卡)
+    function onCardClick() {
+        if (!isFrontShowing) {
+            // 当前显示背面 -> 第一次点击: 开启盲盒，显示正面&随机神谕
+            openBlindBoxFirstTime();
+        } else {
+            // 已经显示正面: 再点击换一张卡 (随机刷新)
+            refreshRandomCard();
+        }
+    }
+
+    // 绑定卡片点击事件 (整张卡片区域)
+    oracleCard.addEventListener('click', onCardClick);
+
+    // 页面预置背面，确保制作者信息展示正常
+    window.addEventListener('load', () => {
+        // 设定初始展示背面，没有任何内容提前展示
+        isFrontShowing = false;
+        cardBackDiv.classList.remove('hidden');
+        cardFrontDiv.classList.add('hidden');
+        // 预置一个默认卡片数据但不显示正面，保证切换时顺畅
+        const defaultCard = pool[0];
+        updateFrontUI(defaultCard);
+        oracleCard.style.cursor = 'pointer';
+    });
+
+    // 移动端与鼠标悬停优化
+    oracleCard.addEventListener('mouseenter', () => {
+        oracleCard.style.transform = 'translateY(-6px)';
+        oracleCard.style.transition = 'transform 0.2s ease';
+    });
+    oracleCard.addEventListener('mouseleave', () => {
+        oracleCard.style.transform = 'translateY(0px)';
+    });
+
+    // 优雅的控制台祝福
+    console.log("%c✨ 班主任的今日治愈盲盒已开启 ✨ 愿你被温柔治愈，24道神谕随时待命 | 花一独家设计", "color: #c17b4a; font-size: 14px; font-weight: bold;");
+</script>
+</body>
+</html>
